@@ -1,11 +1,14 @@
 name: Build and Publish Image
 
 on:
+  pull_request:
+    branches:
+      - "**/**"
   push:
     branches:
       - main
-    paths:
-    - "**Dockerfile**"
+    # paths:
+    # - "**Dockerfile**"
 
 permissions:
   packages: write
