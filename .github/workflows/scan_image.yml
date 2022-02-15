@@ -19,13 +19,11 @@ jobs:
     steps:
       - 
         uses: actions/checkout@v2
-        with:
-          ref: main
       - 
         name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest'
+          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main'
           format: 'sarif'
           output: 'trivy-results.sarif'
 
