@@ -3,15 +3,18 @@ name: Build and Publish Image
 on:
   pull_request:
     branches:
-      - "**/**"
+      - main
   push:
     branches:
       - main
-    # paths:
-    # - "**Dockerfile**"
 
 permissions:
   packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 
 jobs:
   Build:
@@ -24,12 +27,20 @@ jobs:
         name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       -
         name: Build and push
         uses: docker/build-push-action@v2
         with:
-          push: true
-          tags: ghcr.io/onnenon/scala_devcontainer:latest,${{ github.run_number }}
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
