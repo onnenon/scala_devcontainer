@@ -1,14 +1,15 @@
-FROM openjdk:17-bullseye
+FROM registry.access.redhat.com/ubi8/openjdk-17
+
+USER root
 
 ENV SBT_VERSION 1.6.2
 
 RUN \
-  curl -L -o sbt-$SBT_VERSION.deb https://repo.scala-sbt.org/scalasbt/debian/sbt-$SBT_VERSION.deb && \
-  dpkg -i sbt-$SBT_VERSION.deb && \
-  rm sbt-$SBT_VERSION.deb && \
-  apt-get update && \
-  apt-get upgrade -y && \
-  apt-get install sbt zsh -y
+  curl -L -o sbt-$SBT_VERSION.rpm https://scala.jfrog.io/artifactory/rpm/sbt-$SBT_VERSION.rpm && \
+  rpm -i sbt-$SBT_VERSION.rpm && \
+  rm sbt-$SBT_VERSION.rpm && \
+  microdnf upgrade -y && \
+  microdnf install bash
 
 
-RUN useradd -m -G sudo -s $(which zsh) vscode
+RUN useradd -m -G wheel -s /bin/bash vscode
