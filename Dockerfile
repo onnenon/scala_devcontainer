@@ -7,6 +7,7 @@ RUN \
   dpkg -i sbt-$SBT_VERSION.deb && \
   rm sbt-$SBT_VERSION.deb && \
   apt-get update && \
+  apt-get upgrade -y && \
   apt-get install sbt zsh -y
 
 
